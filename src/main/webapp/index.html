@@ -1,16 +1,32 @@
-<html lang="ru">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <head>
     <meta charset="UTF-8">
     <title>Java Enterprise (Topjava)</title>
 </head>
-<body>
-<h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
+<style type="text/css">
+    a, a[name="topjava"] {
+        font-size: 120%;
+        font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+        color: #ffffff;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+        color: #ff46df;
+    }
+    a[name="topjava"]:hover{
+        text-decoration: underline;
+        color: #4033ff;
+    }
+</style>
+<body style="background-color:#000000;">
+<h3>Проект <a href="https://github.com/JavaWebinar/topjava" name="topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
 <hr>
 <ul>
-    <li><a href="users">Users</a></li>
+    <li><a href="users" name="users" style="background-position: left">> Users</a></li>
 </ul>
 <ul>
-    <li><a href="meals">Meals</a></li>
+    <li><a href="meals" name="meals" style="background-position: right">> Meals</a></li>
 </ul>
 </body>
 </html>
