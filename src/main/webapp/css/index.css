@@ -1,0 +1,20 @@
+a, a[name="topjava"] {
+    font-size: 120%;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+body {
+    background-color:#000000;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #ff46df;
+}
+
+a[name="topjava"]:hover {
+    text-decoration: underline;
+    color: #4033ff;
+}

@@ -1,0 +1,47 @@
+a {
+    font-size: 120%;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #ff46df;
+}
+
+h2 {
+    text-align: center;
+    font-size: 120%;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    color: #ffffff;
+}
+
+table, th, td {
+    padding: 10px;
+    border: 2px solid white;
+    border-collapse: collapse;
+}
+
+th {
+    align-items: center;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    color: #ffffff;
+}
+
+td {
+    align-items: center;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
+
+p[id="calories"] {
+    font-size: 250%;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    color: #ffffff;
+}
+
+input {
+    font-size: 150%;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    color: #000000;
+}

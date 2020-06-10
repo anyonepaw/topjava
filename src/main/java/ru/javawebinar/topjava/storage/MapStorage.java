@@ -8,24 +8,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MapStorage {
-    private MapStorage() {
-    }
+public class MapStorage implements Storage {
 
-    private static AtomicInteger counter = new AtomicInteger(0);
-    private static Map<Integer, Meal> map = new ConcurrentHashMap<>();
-
-    public static MapStorage getSingleton() {
-        return new MapStorage();
-    }
+    private AtomicInteger counter = new AtomicInteger(0);
+    private Map<Integer, Meal> map = new ConcurrentHashMap<>();
 
     public Meal get(Integer id) {
         return map.get(id);
     }
 
-    public void save(Meal meal) {
+    public Meal create(Meal meal) {
         meal.setId(counter.incrementAndGet());
-        map.putIfAbsent(counter.get(), meal);
+        return map.putIfAbsent(counter.get(), meal);
     }
 
     public void delete(Integer id) {
@@ -33,9 +27,8 @@ public class MapStorage {
         map.remove(id);
     }
 
-    public void update(Integer id, Meal meal) {
-        meal.setId(id);
-        map.computeIfPresent(id, (k, v) -> meal);
+    public Meal update(Meal meal) {
+        return map.computeIfPresent(meal.getId(), (k, v) -> meal);
     }
 
     public List<Meal> getAll() {
