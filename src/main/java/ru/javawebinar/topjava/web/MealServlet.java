@@ -3,8 +3,8 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.storage.MapStorage;
-import ru.javawebinar.topjava.storage.MealStorage;
+import ru.javawebinar.topjava.storage.meal.MealInternalStorage;
+import ru.javawebinar.topjava.storage.meal.MealStorage;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -21,7 +21,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init() {
-        storage = new MapStorage();
+        storage = new MealInternalStorage();
         MealsUtil.getMeals().forEach(storage::create);
     }
 
@@ -39,20 +39,22 @@ public class MealServlet extends HttpServlet {
             case "create":
             case "update":
                 if (id != null) {
-                    Meal meal = storage.get(Integer.parseInt(id));
-                    request.setAttribute("meal", meal);
+                    Meal updatedMeal = storage.get(Integer.parseInt(id));
+                    log.debug("meals: before update: {}", updatedMeal);
+                    request.setAttribute("meal", updatedMeal);
                 }
                 request.getRequestDispatcher("/update-meal.jsp").forward(request, response);
                 break;
             case "delete":
                 if (id != null) {
+                    Meal deletedMeal = storage.get(Integer.parseInt(id));
                     storage.delete(Integer.parseInt(id));
-                    log.debug("delete");
+                    log.debug("meals: deleted meal: {}", deletedMeal);
                 }
                     response.sendRedirect("meals");
                 break;
             default:
-                log.debug("read");
+                log.debug("meals: show meal list");
                 request.setAttribute("meals",
                         MealsUtil.filteredByStreams(storage.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
@@ -73,12 +75,12 @@ public class MealServlet extends HttpServlet {
         if (id.isEmpty()) {
             Meal createdMeal = storage.create(meal);
             if (createdMeal != null) {
-                log.debug("create");
+                log.debug("meals: created meal {}", createdMeal);
             }
         } else {
             meal.setId(Integer.parseInt(id));
             Meal updatedMeal = storage.update(meal);
-            log.debug("update");
+            log.debug("meals: updated meal {}", updatedMeal);
         }
         response.sendRedirect("meals");
     }
