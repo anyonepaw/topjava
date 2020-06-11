@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class MapStorage implements Storage {
-
-    private AtomicInteger counter = new AtomicInteger(0);
+public class MapStorage implements MealStorage {
     private Map<Integer, Meal> map = new ConcurrentHashMap<>();
 
     public Meal get(Integer id) {
@@ -18,13 +15,22 @@ public class MapStorage implements Storage {
     }
 
     public Meal create(Meal meal) {
-        meal.setId(counter.incrementAndGet());
-        return map.putIfAbsent(counter.get(), meal);
+        meal.setId(map.size());
+        return map.put(meal.getId(), meal);
     }
 
     public void delete(Integer id) {
-        counter.decrementAndGet();
-        map.remove(id);
+        int lastElement = map.size() - 1;
+        if(id != lastElement)  {
+            map.values().stream()
+                    .skip(id + 1)
+                    .forEach(meal -> {
+                        int prevMealId = meal.getId() - 1;
+                        meal.setId(prevMealId);
+                        map.put(prevMealId, meal);
+                    });
+        }
+        map.remove(lastElement);
     }
 
     public Meal update(Meal meal) {
@@ -34,6 +40,4 @@ public class MapStorage implements Storage {
     public List<Meal> getAll() {
         return new ArrayList<>(map.values());
     }
-
-
 }
