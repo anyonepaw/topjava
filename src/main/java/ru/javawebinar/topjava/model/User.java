@@ -2,11 +2,12 @@ package ru.javawebinar.topjava.model;
 
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
-public class User extends AbstractNamedEntity {
+public class User extends AbstractNamedEntity implements Comparable<User> {
 
     private String email;
 
@@ -77,6 +78,10 @@ public class User extends AbstractNamedEntity {
         return password;
     }
 
+    public boolean isNew() {
+        return id == null;
+    }
+
     @Override
     public String toString() {
         return "User (" +
@@ -87,5 +92,28 @@ public class User extends AbstractNamedEntity {
                 ", roles=" + roles +
                 ", caloriesPerDay=" + caloriesPerDay +
                 ')';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return isEnabled() == user.isEnabled() &&
+                getCaloriesPerDay() == user.getCaloriesPerDay() &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getRegistered(), user.getRegistered()) &&
+                Objects.equals(getRoles(), user.getRoles());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEmail(), getPassword(), isEnabled(), getRegistered(), getRoles(), getCaloriesPerDay());
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return this.getName().compareTo(user.getName());
     }
 }
