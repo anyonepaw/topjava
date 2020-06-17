@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class InMemoryMealRepository implements MealRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
-    private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private Map<Integer, ConcurrentHashMap<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -31,14 +31,17 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal save(Meal meal, int userId) {
         log.info("meal repository: save user {} meal {}", userId, meal);
+        if(!repository.containsKey(userId)) {
+            repository.put(userId, new ConcurrentHashMap<>());
+        }
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             meal.setUserId(userId);
-            repository.put(meal.getId(), meal);
+            repository.get(userId).put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        return repository.replace(found(meal.getId(), userId), meal);
+        return repository.get(userId).computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
@@ -50,23 +53,22 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         log.info("meal repository: get {}", id);
-        return repository.get(found(id, userId));
+        return repository.get(userId).get(found(id, userId));
     }
 
     // -1 if not found
     private int found(int id, int userId) {
-        return repository.computeIfPresent(id,
+        return repository.get(userId).computeIfPresent(id,
                 (mealId, meal) -> meal.getUserId() == userId ? meal : null) != null ? id : -1;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
         log.info("meal repository: getAll");
-        return repository.values()
+        return repository.get(userId).values()
                 .stream()
-                .filter(meal -> meal.getUserId() == userId)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -24,11 +24,11 @@ public class MealService {
     }
 
     public void delete(int id, int userId) {
-        checkNotFoundWithId(repository.delete(id, userId), id, userId);
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
     public Meal get(int id, int userId) {
-        return checkNotFoundWithId(repository.get(id, userId), id, userId);
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
     public List<MealTo> getAll(int userId, int usersCaloriesPerDay) {
@@ -40,6 +40,6 @@ public class MealService {
     }
 
     public void update(Meal meal, int userId) {
-        checkNotFoundWithId(repository.save(meal, userId), meal.getId(), userId);
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 }
