@@ -1,6 +1,10 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -10,8 +14,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -25,6 +32,28 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss:SS");
+
+    @Rule
+    public TestRule watcher = new TestWatcher() {
+        long timeStart;
+        long timeEnd;
+        protected void starting(Description description) {
+            timeStart = System.currentTimeMillis();
+            System.out.println("===========================================================================");
+            System.out.println("Start Time: " + formatter.format(LocalDateTime.now()));
+            System.out.println("===========================================================================");
+        }
+        protected void finished(Description description) {
+            timeEnd = System.currentTimeMillis();
+            double seconds = (timeEnd - timeStart) / 1000.0;
+            System.out.println("\n===========================================================================");
+            System.out.println("Test: " + description.getMethodName() + " COMPLETED - time: " +
+                    new DecimalFormat("0.000").format(seconds) + " sec");
+            System.out.println("===========================================================================\n");
+        }
+    };
 
     @Autowired
     private MealService service;
