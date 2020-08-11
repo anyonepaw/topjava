@@ -50,7 +50,7 @@ function save() {
     });
 }
 
-let failedNote;
+var failedNote;
 
 function closeNoty() {
     if (failedNote) {
