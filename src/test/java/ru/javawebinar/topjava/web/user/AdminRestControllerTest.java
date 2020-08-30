@@ -100,10 +100,11 @@ class AdminRestControllerTest extends AbstractControllerTest {
     @Test
     void getWithMeals() throws Exception {
         assumeDataJpa();
-        perform(MockMvcRequestBuilders.get(REST_URL + USER_ID + "/with-meals"))
+        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID + "/with-meals")
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_WITH_MEALS_MATCHER.contentJson(USER));
+                .andExpect(USER_WITH_MEALS_MATCHER.contentJson(ADMIN));
     }
 }
